@@ -1,0 +1,22 @@
+{
+	"manifest_version": 3,
+	"name": "SwiftSave",
+	"version": "0.1",
+	"description": "Download Photos and Videos from Instagram Posts and Reels",
+
+	"icons": {
+		"128": "icon.png"
+	},
+
+	"content_scripts": [
+		{
+			"matches": [
+				"https://www.instagram.com/p/*",
+				"https://www.instagram.com/reel/*"
+			],
+			"js": [
+				"scripts/main.js"
+			]
+		}
+	]
+}
