@@ -1,7 +1,5 @@
 # SwiftSave for Desktop
 
-Download Photos and Videos from Instagram Posts and Reels
-
 ## Compatibility
 
 All browsers supporting fetch API
