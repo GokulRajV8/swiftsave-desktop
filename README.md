@@ -2,7 +2,11 @@
 
 Download Photos and Videos from Instagram Posts and Reels
 
-## Install and usage
+## Compatibility
+
+All browsers supporting fetch API
+
+## Installation
 
 * Enable Chrome extensions developer mode
 * Load this directory in `chrome://extensions/`
