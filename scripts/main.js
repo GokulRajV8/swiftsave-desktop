@@ -1,28 +1,15 @@
-const BASE_URL = window.location.origin;
-const IG_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-let POST_CODE = null;
+// Extracting data from webpage
+const pagePath = (window.location.pathname.endsWith('/')) ? window.location.pathname.slice(0, -1) : window.location.pathname;
+const postCodeArray = pagePath.split('/');
+const mediaIds = document.querySelector('body').innerHTML.match(/\"media_id\":\"([^\"]*)\",\"media_owner_id\":\"([^\"]*)\"/);
 
-function convertToPostId(postCode) {
-    let id = BigInt(0);
-    for (let i = 0; i < postCode.length; i++) {
-        let char = postCode[i];
-        id = (id * BigInt(64)) + BigInt(IG_ALPHABET.indexOf(char));
-    }
-    return id.toString(10);
-}
+// Populating IDs
+const POST_CODE = postCodeArray[postCodeArray.length - 1];
+const MEDIA_ID = mediaIds[1];
+const MEDIA_OWNER_ID = mediaIds[2];
 
-async function saveFile(url, fileName) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-
-    const a = document.createElement('a');
-    a.download = fileName;
-    a.href = URL.createObjectURL(blob);
-    a.click();
-    URL.revokeObjectURL(a.href);
-}
-
-async function downloadMedia(userName, json_data, count) {
+async function downloadMedia(userName, json_data, count = 0) {
+    // Getting media URL and file extension
     let mediaURL = null;
     let fileExtension = null;
     if (json_data['media_type'] == 1) {
@@ -33,17 +20,23 @@ async function downloadMedia(userName, json_data, count) {
         fileExtension = 'mp4';
     }
 
-    if (count == 0)
-        await saveFile(mediaURL, userName + '_' + POST_CODE + '.' + fileExtension);
-    else
-        await saveFile(mediaURL, userName + '_' + POST_CODE + '_' + count + '.' + fileExtension);
+    // Creating blob from media URL
+    const response = await fetch(mediaURL);
+    const blob = await response.blob();
+
+    // Downloading blob as file
+    const a = document.createElement('a');
+    a.download = userName + '_' + POST_CODE + '_' + count + '.' + fileExtension;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    URL.revokeObjectURL(a.href);
 }
 
 async function downloadPost() {
-    const postId = convertToPostId(POST_CODE);
-    const apiURL = new URL(`/api/v1/media/${postId}/info`, BASE_URL);
+    const apiURL = new URL(`/api/v1/media/${MEDIA_ID}_${MEDIA_OWNER_ID}/info`, window.location.origin);
     let json_data = null;
 
+    // Getting media info using IDs
     try {
         const response = await fetch(apiURL.href, {
             method: 'GET',
@@ -59,6 +52,7 @@ async function downloadPost() {
         return null;
     }
 
+    // Downloading media using the info received
     const userName = json_data['user']['username'];
     if (json_data.carousel_media) {
         let count = 1;
@@ -67,14 +61,16 @@ async function downloadPost() {
             count++;
         }
     } else {
-        await downloadMedia(userName, json_data, 0);
+        await downloadMedia(userName, json_data);
     }
 }
 
 function createButton() {
+    // Section selection
     let postSection = document.querySelector('main').children[0].children[0].children[0];
     let buttonsSection = postSection.children[1].children[0].children[3].children[0].children[0];
 
+    // Creating button and attaching click event
     let downloadButton = document.createElement('div');
     downloadButton.style = 'padding: 8px';
     downloadButton.innerHTML = `
@@ -94,11 +90,8 @@ function createButton() {
     </svg>
     `;
     buttonsSection.appendChild(downloadButton);
-
     downloadButton.addEventListener('click', downloadPost);
 }
 
-const pagePath = (window.location.pathname.endsWith('/')) ? window.location.pathname.slice(0, -1) : window.location.pathname;
-const postCodeArray = pagePath.split('/');
-POST_CODE = postCodeArray[postCodeArray.length - 1];
+// Creating button
 createButton();
