@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "SwiftSave",
+	"name": "SwiftSave for Desktop",
 	"version": "0.1",
-	"description": "Download Photos and Videos from Instagram Posts and Reels",
+	"description": "Download photos and videos from Instagram posts and reels",
 
 	"icons": {
 		"128": "icon.png"
