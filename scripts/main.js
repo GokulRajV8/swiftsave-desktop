@@ -68,15 +68,16 @@ async function downloadPost() {
 }
 
 function createButton() {
-    // Section selection
-    let postSection = document.querySelector('main').children[0].children[0].children[0];
-    let buttonsSection = postSection.children[1].children[0].children[3].children[0].children[0];
-
     // Creating button and attaching click event
-    let downloadButton = document.createElement('div');
-    downloadButton.style = 'padding: 8px';
+    const downloadSection = document.createElement('div');
+    const downloadButton = document.createElement('div');
+    downloadSection.style = `
+    width: 44px; height: 44px; position: fixed; top: 20px; right: 20px; border-radius: 12px;
+    border: 1px solid rgb(var(--ig-primary-text)); background: rgb(var(--ig-secondary-background));
+    `;
+    downloadButton.style = 'width: 24px; height: 24px; padding: 10px;';
     downloadButton.innerHTML = `
-    <svg fill='currentColor' height='24' role='img' viewBox='0 0 24 24' width='24'>
+    <svg fill='rgb(var(--ig-primary-text))' height='24' width='24' role='img' viewBox='0 0 24 24'>
         <path d='M3 14.25C3.41421 14.25 3.75 14.5858 3.75 15C3.75 16.4354 3.75159 17.4365 3.85315 18.1919C3.9518 18.9257 4.13225
         19.3142 4.40901 19.591C4.68577 19.8678 5.07435 20.0482 5.80812 20.1469C6.56347 20.2484 7.56459 20.25 9 20.25H15C16.4354
         20.25 17.4365 20.2484 18.1919 20.1469C18.9257 20.0482 19.3142 19.8678 19.591 19.591C19.8678 19.3142 20.0482 18.9257
@@ -91,8 +92,9 @@ function createButton() {
         16.6615 11.7894 16.75 12 16.75Z'/>
     </svg>
     `;
-    buttonsSection.appendChild(downloadButton);
-    downloadButton.addEventListener('click', downloadPost);
+    document.body.appendChild(downloadSection);
+    downloadSection.appendChild(downloadButton);
+    downloadSection.addEventListener('click', downloadPost);
 }
 
 // Creating button
