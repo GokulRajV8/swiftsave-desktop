@@ -72,7 +72,7 @@ function createButton() {
     const downloadSection = document.createElement('div');
     const downloadButton = document.createElement('div');
     downloadSection.style = `
-    width: 44px; height: 44px; position: fixed; top: 20px; right: 20px; border-radius: 12px;
+    width: 44px; height: 44px; position: fixed; top: 20px; right: 20px; border-radius: 12px; cursor: pointer;
     border: 1px solid rgb(var(--ig-primary-text)); background: rgb(var(--ig-secondary-background));
     `;
     downloadButton.style = 'width: 24px; height: 24px; padding: 10px;';
