@@ -11,8 +11,8 @@ All browsers supporting fetch API
 
 ## Usage
 
-* Works only on instagram.com/p/* and instagram.com/reel/* URLs
-* Download button appears next to share post button
+* Works only on `instagram.com/p/*` and `instagram.com/reel/*` URLs
+* Download button appears at top-right corner of screen
 * If not, refresh the page
 
 ## Inspiration
