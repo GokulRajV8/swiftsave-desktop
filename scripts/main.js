@@ -8,7 +8,11 @@ const POST_CODE = postCodeArray[postCodeArray.length - 1];
 const MEDIA_ID = mediaIds[1];
 const MEDIA_OWNER_ID = mediaIds[2];
 
-async function downloadMedia(userName, json_data, count = 0) {
+function getCookie(name) {
+    return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
+}
+
+async function downloadMedia(userName, json_data, id = 0) {
     // Getting media URL and file extension
     let mediaURL = null;
     let fileExtension = null;
@@ -26,7 +30,7 @@ async function downloadMedia(userName, json_data, count = 0) {
 
     // Downloading blob as file
     const a = document.createElement('a');
-    a.download = userName + '_' + POST_CODE + '_' + count + '.' + fileExtension;
+    a.download = userName + '_' + POST_CODE + '_' + id + '.' + fileExtension;
     a.href = URL.createObjectURL(blob);
     a.click();
     URL.revokeObjectURL(a.href);
@@ -41,7 +45,7 @@ async function downloadPost() {
         const response = await fetch(apiURL.href, {
             method: 'GET',
             headers: {
-                'x-csrftoken': document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1],
+                'x-csrftoken': getCookie('csrftoken'),
                 'x-ig-app-id': '936619743392459',
             },
         });
@@ -55,10 +59,8 @@ async function downloadPost() {
     // Downloading media using the info received
     const userName = json_data['user']['username'];
     if (json_data.carousel_media) {
-        let count = 1;
-        for (const item of json_data.carousel_media) {
-            await downloadMedia(userName, item, count);
-            count++;
+        for (const id in json_data.carousel_media) {
+            await downloadMedia(userName, json_data.carousel_media[id], id);
         }
     } else {
         await downloadMedia(userName, json_data);
